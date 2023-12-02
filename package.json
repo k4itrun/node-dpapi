@@ -17,11 +17,10 @@
   "author": "Brad Hughes",
   "license": "MIT",
   "os": [
-    "win32",
-    "linux"
+    "win32"
   ],
   "dependencies": {
     "bindings": "^1.5.0",
-    "nan": "^2.14.1"
+    "nan": "^2.18.0"
   }
 }
