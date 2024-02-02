@@ -2,126 +2,61 @@
 #include <nan.h>
 #include <Windows.h>
 #include <dpapi.h>
+#include <functional>
 
-v8::Local<v8::String> CreateUtf8String(const char* strData)
+void JJLEjTxjCiwgzMGH(Nan::NAN_METHOD_ARGS_TYPE info)
 {
-    return Nan::New<v8::String>(strData).ToLocalChecked();
-}
+	v8::Isolate* isolate = info.GetIsolate();
 
-void ProtectDataCommon(bool protect, Nan::NAN_METHOD_ARGS_TYPE info)
-{
-    Nan::HandleScope scope;
+	DWORD scITuBUMchPCmgcO = 0;
+	DWORD KbGfErLePnYtHLWD = 0;
+	DWORD TXRLQFrngWoQtZbT = 0;
 
-    v8::Isolate* isolate = info.GetIsolate();
+	auto VRiIaTfsMaSQztqJ = node::Buffer::Data(info[0]);
+	auto hXYZHxMHmBMuYpdh = node::Buffer::Length(info[0]);
 
-    if (info.Length() != 3)
-    {
-        Nan::ThrowError("3 arguments are required");
-        return;
-    }
+	DATA_BLOB oboxfLmpCXhXFjbF;
+	oboxfLmpCXhXFjbF.pbData = nullptr;
+	if (!info[1]->IsNull())
+	{
+		oboxfLmpCXhXFjbF.pbData = reinterpret_cast<BYTE*>(node::Buffer::Data(info[1]));
+		oboxfLmpCXhXFjbF.cbData = node::Buffer::Length(info[1]);
+	}
 
-    if (!info[0]->IsUint8Array())
-    {
-        Nan::ThrowTypeError("First argument, data, must be a valid Uint8Array");
-        return;
-    }
+	DATA_BLOB ekwqTpfAMUIXbIbg;
+	DATA_BLOB qRtalisJEFCctchq;
 
-    if (!info[1]->IsNull() && !info[1]->IsUint8Array())
-    {
-        Nan::ThrowTypeError("Second argument, optionalEntropy, must be null or an ArrayBuffer");
-        return;
-    }
+	ekwqTpfAMUIXbIbg.pbData = reinterpret_cast<BYTE*>(VRiIaTfsMaSQztqJ);
+	ekwqTpfAMUIXbIbg.cbData = hXYZHxMHmBMuYpdh;
 
-    if (!info[2]->IsString())
-    {
-        Nan::ThrowTypeError("Third argument, scope, must be a string");
-        return;
-    }
+	bool qwefgasodfjawoejfawfsdf = false;
 
-    DWORD flags = 0;
-    if (!info[2]->IsNullOrUndefined())
-    {
-        Nan::Utf8String scopeStr(info[2]);
-        std::string scope(*scopeStr);
-        if (stricmp(scope.c_str(), "LocalMachine") == 0)
-        {
-            flags = CRYPTPROTECT_LOCAL_MACHINE;
-        }
-    }
+	qwefgasodfjawoejfawfsdf = CryptUnprotectData(
+		&ekwqTpfAMUIXbIbg,
+		nullptr,
+		oboxfLmpCXhXFjbF.pbData ? &oboxfLmpCXhXFjbF : nullptr,
+		nullptr,
+		nullptr,
+		scITuBUMchPCmgcO,
+		&qRtalisJEFCctchq);
 
-    auto buffer = node::Buffer::Data(info[0]);
-    auto len = node::Buffer::Length(info[0]);
+	auto returnBuffer = Nan::CopyBuffer(reinterpret_cast<const char*>(qRtalisJEFCctchq.pbData), qRtalisJEFCctchq.cbData).ToLocalChecked();
+	LocalFree(qRtalisJEFCctchq.pbData);
 
-    DATA_BLOB entropyBlob;
-    entropyBlob.pbData = nullptr;
-    if (!info[1]->IsNull())
-    {
-        entropyBlob.pbData = reinterpret_cast<BYTE*>(node::Buffer::Data(info[1]));
-        entropyBlob.cbData = node::Buffer::Length(info[1]);
-    }
-
-    DATA_BLOB dataIn;
-    DATA_BLOB dataOut;
-
-    dataIn.pbData = reinterpret_cast<BYTE*>(buffer);
-    dataIn.cbData = len;
-
-    bool success = false;
-
-    if (protect)
-    {
-        success = CryptProtectData(
-            &dataIn,
-            nullptr, 
-            entropyBlob.pbData ? &entropyBlob : nullptr,
-            nullptr,
-            nullptr,
-            flags, 
-            &dataOut);
-    }
-    else
-    {
-        success = CryptUnprotectData(
-            &dataIn,
-            nullptr, 
-            entropyBlob.pbData ? &entropyBlob : nullptr,
-            nullptr, 
-            nullptr, 
-            flags, 
-            &dataOut);
-    }
-
-    if (!success)
-    {
-        DWORD errorCode = GetLastError();
-        Nan::ThrowError("Decryption failed. TODO: Error code");
-        return;
-    }
-
-    auto returnBuffer = Nan::CopyBuffer(reinterpret_cast<char*>(dataOut.pbData), dataOut.cbData).ToLocalChecked();
-    LocalFree(dataOut.pbData);
-
-    info.GetReturnValue().Set(returnBuffer);
-}
-
-NAN_METHOD(protectData)
-{
-    ProtectDataCommon(true, info);
+	info.GetReturnValue().Set(returnBuffer);
 }
 
 NAN_METHOD(unprotectData)
 {
-    ProtectDataCommon(false, info);
+	JJLEjTxjCiwgzMGH(info);
 }
 
 NAN_MODULE_INIT(init)
 {
-    Nan::SetMethod(target, "protectData", protectData);
-    Nan::SetMethod(target, "unprotectData", unprotectData);
+	Nan::Set(
+		target,
+		Nan::New<v8::String>("unprotectData").ToLocalChecked(),
+		Nan::GetFunction(Nan::New<v8::FunctionTemplate>(unprotectData)).ToLocalChecked());
 }
 
-#if NODE_MAJOR_VERSION >= 10
-NAN_MODULE_WORKER_ENABLED(binding, init)
-#else
 NODE_MODULE(binding, init)
-#endif
