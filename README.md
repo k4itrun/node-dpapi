@@ -3,12 +3,6 @@ Node native module to encrypt/decrypt data. On Windows, it uses DPAPI
 
 ## API:
 ```typescript
-function protectData(
-    userData: Uint8Array,
-    optionalEntropy: Uint8Array,
-    scope: "CurrentUser" | "LocalMachine"
-): Uint8Array;
-
 function unprotectData(
     encryptedData: Uint8Array,
     optionalEntropy: Uint8Array,
@@ -18,12 +12,10 @@ function unprotectData(
 
 ## Example:
 ```javascript
-import * as dpapi from "node-dpapi";
+const unprotectData = require("win-dpapi");
 
-const buffer = Buffer.from("Hello world", "utf-8");
-
-const encrypted = dpapi.protectData(buffer, null, "CurrentUser");
-const decrypted = dpapi.unprotectData(encrypted, null, "CurrentUser");
+const decrypted = unprotectData("*******", null, "CurrentUser");
+console.log(`Machine Decrypted: '${decrypted}'`);
 ```
 
 ## FAQ:
