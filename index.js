@@ -7,7 +7,7 @@ const dpapi = require('bindings')('node-dpapi');
  * @param {"CurrentUser" | "LocalMachine"} scope - The scope of protection.
  * @returns {Uint8Array} - The unprotected data.
  */
-function unprotectData(encryptedData, optionalEntropy, scope) {
+const unprotectData = (encryptedData, optionalEntropy, scope) => {
     return dpapi.unprotectData(encryptedData, optionalEntropy, scope);
 }
 
