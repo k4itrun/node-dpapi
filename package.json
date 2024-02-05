@@ -21,6 +21,6 @@
   ],
   "dependencies": {
     "bindings": "^1.5.0",
-    "nan-win": "^2.19.0"
+    "nan": "^2.18.0"
   }
 }
