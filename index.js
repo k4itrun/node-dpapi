@@ -1,4 +1,4 @@
-const dpapi = require('bindings')('node-dpapi');
+const DPAPI = require('bindings')('node-dpapi');
 
 /**
  * Unprotects data using DPAPI.
@@ -8,6 +8,6 @@ const dpapi = require('bindings')('node-dpapi');
  * @returns {Uint8Array} - The unprotected data.
  */
 
-module.exports.unprotectData = (encryptedData, optionalEntropy, scope) => {
-    return dpapi.unprotectData(encryptedData, optionalEntropy, scope);
-}
+module.exports.unprotectData = 
+    (encryptedData, optionalEntropy, scope) => 
+        DPAPI.unprotectData(encryptedData, optionalEntropy, scope);
